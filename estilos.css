@@ -99,12 +99,10 @@ button:active {
   border-radius: 20px;
   margin-bottom: 2rem;
   box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
-  transition: all 0.3s ease;
 }
 
 #mini-carrito:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5);
+  box-shadow: 0 8px 25px rgba(183, 217, 247, 0.5);
 }
 
 #mini-carrito button {
@@ -112,14 +110,14 @@ button:active {
   border: 2px solid white;
   color: #4facfe;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 #mini-carrito button:hover {
   background: #f8f9fa;
   color: #2980b9;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
 #mini-carrito p {
@@ -155,10 +153,11 @@ button:active {
 
 #productos img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: 180px;
+  object-fit: contain;
   border-radius: 15px;
   margin-bottom: 1rem;
+  background-color: white;
 }
 
 #productos > li > div {
@@ -182,8 +181,13 @@ button:active {
 
 #productos p span {
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: #28a745;
+}
+
+#productos p:has(span) {
+  text-align: center;
+  margin: 1rem 0;
 }
 
 #productos footer {
@@ -197,19 +201,38 @@ button:active {
   margin: 0;
 }
 
+.buttonVerDetalle {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+}
+
+.buttonVerDetalle:hover {
+  box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4) !important;
+}
+
+.agregarProducto {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+}
+
+.agregarProducto:hover {
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
+}
+
 .modal {
   border: none;
   border-radius: 20px;
-  padding: 2rem;
+  padding: 1.5rem;
   width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
+  max-width: 600px;
+  max-height: 85vh;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   background: white;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  overflow-y: auto;
 }
 
 .modal::backdrop {
@@ -222,11 +245,12 @@ button:active {
 
 .detalle img {
   width: 100%;
-  max-width: 300px;
-  height: 200px;
-  object-fit: cover;
+  max-width: 350px;
+  height: 250px;
+  object-fit: contain;
   border-radius: 15px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  background-color: white;
 }
 
 .detalle h1 {
@@ -365,6 +389,76 @@ button:active {
 .confirmacion footer button {
   flex: 1;
   margin: 0;
+}
+
+.btn-cerrar {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3) !important;
+}
+
+.btn-cerrar:hover {
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4) !important;
+}
+
+.total-carrito {
+  text-align: center;
+  padding: 1.5rem 0;
+  border-top: 2px solid #e9ecef;
+  margin-top: 1rem;
+}
+
+.total-carrito h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #28a745;
+  margin: 0;
+}
+
+.medios-pago {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.medios-pago h3 {
+  color: #495057;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.medios-pago ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.medios-pago li {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.medios-pago i {
+  color: #28a745;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+button:disabled:hover {
+  transform: none !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
 }
 
 
