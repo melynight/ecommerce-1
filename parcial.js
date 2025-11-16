@@ -14,9 +14,9 @@ const productos = [
             precio: 220000.00, imagen: "monitor27hdblanco.jpg", categoria: "Monitores", stock: 24 }
     ],
     [
-        { id: "004", nombre: "RAM 16GB Axus RGB", descripcion: "Memoria RAM 16GB 2.4HZ RGB SYNC", precio: 55000.00, imagen: "ramaxus16.png", categoria: "Memorias", stock: 34 },
-        { id: "005", nombre: "RAM 8GB Axus RGB", descripcion: "Memoria RAM 8GB 2.4HZ RGB SYNC", precio: 35000.00, imagen: "ramaxus8.png", categoria: "Memorias", stock: 27 },
-        { id: "006", nombre: "RAM 16GB HyperY RGB", descripcion: "Memoria RAM 16GB HyperY 2.4HZ RGB SYNC", precio: 65000.00, imagen: "ramhypery16.webp", categoria: "Memorias", stock: 30 }
+        { id: "004", nombre: "RAM 16GB Axus RGB", descripcion: "Memoria RAM 16GB 2.4GHz RGB SYNC", precio: 55000.00, imagen: "ramaxus16.png", categoria: "Memorias", stock: 34 },
+        { id: "005", nombre: "RAM 8GB Axus RGB", descripcion: "Memoria RAM 8GB 2.4GHz RGB SYNC", precio: 35000.00, imagen: "ramaxus8.png", categoria: "Memorias", stock: 27 },
+        { id: "006", nombre: "RAM 16GB HyperY RGB", descripcion: "Memoria RAM 16GB HyperY 2.4GHz RGB SYNC", precio: 65000.00, imagen: "ramhypery16.webp", categoria: "Memorias", stock: 30 }
     ],
     [
         { id: "007", nombre: "Disco SSD 1TB", descripcion: "Disco sólido de 1TB Kingtan", precio: 100000.00, imagen: "discokingtan.png", categoria: "Discos", stock: 14 },
@@ -173,10 +173,14 @@ function mostrarProductos(productos)
         const $footer = crearEtiqueta("footer");
         $producto.appendChild($footer);
         const $btnDetalle = crearEtiqueta("button", {class: "buttonVerDetalle"});
-        $btnDetalle.innerHTML = '<i class="bi bi-eye"></i> Ver detalle';
+        const $iconoDetalle = crearEtiqueta("i", {class: "bi bi-eye"});
+        $btnDetalle.appendChild($iconoDetalle);
+        $btnDetalle.appendChild(document.createTextNode(" Ver detalle"));
         $footer.appendChild($btnDetalle);
         const $btnAgregar = crearEtiqueta("button", {class: "agregarProducto"});
-        $btnAgregar.innerHTML = '<i class="bi bi-cart-plus"></i> Agregar';
+        const $iconoAgregar = crearEtiqueta("i", {class: "bi bi-cart-plus"});
+        $btnAgregar.appendChild($iconoAgregar);
+        $btnAgregar.appendChild(document.createTextNode(" Agregar"));
         $footer.appendChild($btnAgregar);
     }
 }
@@ -207,12 +211,12 @@ function verDetalleItem(producto)
     const $iconoCerrar = crearEtiqueta("i", {class: "bi bi-x-lg"});
     $btnCerrar.appendChild($iconoCerrar);
     $btnCerrar.appendChild(document.createTextNode(" Cerrar"));
-    const $btnAgregar = crearEtiqueta("button", {});
-    const $iconoAgregar = crearEtiqueta("i", {class: "bi bi-cart-plus"});
-    $btnAgregar.appendChild($iconoAgregar);
-    $btnAgregar.appendChild(document.createTextNode(" Agregar"));
+    const $btnAgregarModal = crearEtiqueta("button", {});
+    const $iconoAgregarModal = crearEtiqueta("i", {class: "bi bi-cart-plus"});
+    $btnAgregarModal.appendChild($iconoAgregarModal);
+    $btnAgregarModal.appendChild(document.createTextNode(" Agregar"));
     $footer.appendChild($btnCerrar);
-    $footer.appendChild($btnAgregar);
+    $footer.appendChild($btnAgregarModal);
     $detalle.appendChild($footer);
     
     document.body.appendChild($modalDetalle);
@@ -223,7 +227,7 @@ function verDetalleItem(producto)
         document.body.removeChild($modalDetalle);
     });
 
-    $btnAgregar.addEventListener("click", () => {
+    $btnAgregarModal.addEventListener("click", () => {
         agregarProducto(producto);
         $modalDetalle.close();
         document.body.removeChild($modalDetalle);
@@ -338,10 +342,10 @@ function mostrarModalCarrito() {
     $carrito.appendChild($totalSection);
     
     const $footer = crearEtiqueta("footer");
-    const $btnCerrar = crearEtiqueta("button", {class: "btn-cerrar"});
-    const $iconoCerrar = crearEtiqueta("i", {class: "bi bi-arrow-left"});
-    $btnCerrar.appendChild($iconoCerrar);
-    $btnCerrar.appendChild(document.createTextNode(" Volver atrás"));
+    const $btnCerrarCarrito = crearEtiqueta("button", {class: "btn-cerrar"});
+    const $iconoCerrarCarrito = crearEtiqueta("i", {class: "bi bi-arrow-left"});
+    $btnCerrarCarrito.appendChild($iconoCerrarCarrito);
+    $btnCerrarCarrito.appendChild(document.createTextNode(" Volver atrás"));
     const $btnVaciar = crearEtiqueta("button", {});
     const $iconoVaciar = crearEtiqueta("i", {class: "bi bi-trash"});
     $btnVaciar.appendChild($iconoVaciar);
@@ -355,8 +359,8 @@ function mostrarModalCarrito() {
     }
     const $iconoPagar = crearEtiqueta("i", {class: "bi bi-credit-card"});
     $btnPagar.appendChild($iconoPagar);
-    $btnPagar.appendChild(document.createTextNode(" Proceder al pago"));
-    $footer.appendChild($btnCerrar);
+    $btnPagar.appendChild(document.createTextNode(" Finalizar compra"));
+    $footer.appendChild($btnCerrarCarrito);
     $footer.appendChild($btnVaciar);
     $footer.appendChild($btnPagar);
     $carrito.appendChild($footer);
@@ -364,7 +368,7 @@ function mostrarModalCarrito() {
     document.body.appendChild($modalCarrito);
     $modalCarrito.showModal();
     
-    $btnCerrar.addEventListener("click", () => {
+    $btnCerrarCarrito.addEventListener("click", () => {
         $modalCarrito.close();
         document.body.removeChild($modalCarrito);
     });
@@ -374,6 +378,13 @@ function mostrarModalCarrito() {
             return;
         }
         mostrarConfirmacionVaciar($modalCarrito);
+    });
+    
+    $btnPagar.addEventListener("click", () => {
+        if (carrito.getItems().length === 0) {
+            return;
+        }
+        mostrarConfirmacionCompra($modalCarrito);
     });
 }
 
@@ -394,27 +405,27 @@ function mostrarModalCantidadEliminar(item, modalCarrito) {
     $contenido.appendChild($inputContainer);
     
     const $footer = crearEtiqueta("footer");
-    const $btnCancelar = crearEtiqueta("button", {});
-    const $iconoCancelar = crearEtiqueta("i", {class: "bi bi-arrow-left"});
-    $btnCancelar.appendChild($iconoCancelar);
-    $btnCancelar.appendChild(document.createTextNode(" Volver atrás"));
-    const $btnEliminar = crearEtiqueta("button", {});
-    const $iconoEliminar = crearEtiqueta("i", {class: "bi bi-trash"});
-    $btnEliminar.appendChild($iconoEliminar);
-    $btnEliminar.appendChild(document.createTextNode(" Eliminar"));
-    $footer.appendChild($btnCancelar);
-    $footer.appendChild($btnEliminar);
+    const $btnCancelarEliminar = crearEtiqueta("button", {});
+    const $iconoCancelarEliminar = crearEtiqueta("i", {class: "bi bi-arrow-left"});
+    $btnCancelarEliminar.appendChild($iconoCancelarEliminar);
+    $btnCancelarEliminar.appendChild(document.createTextNode(" Volver atrás"));
+    const $btnEliminarConfirm = crearEtiqueta("button", {});
+    const $iconoEliminarConfirm = crearEtiqueta("i", {class: "bi bi-trash"});
+    $btnEliminarConfirm.appendChild($iconoEliminarConfirm);
+    $btnEliminarConfirm.appendChild(document.createTextNode(" Eliminar"));
+    $footer.appendChild($btnCancelarEliminar);
+    $footer.appendChild($btnEliminarConfirm);
     $contenido.appendChild($footer);
     
     document.body.appendChild($modalCantidad);
     $modalCantidad.showModal();
     
-    $btnCancelar.addEventListener("click", () => {
+    $btnCancelarEliminar.addEventListener("click", () => {
         $modalCantidad.close();
         document.body.removeChild($modalCantidad);
     });
     
-    $btnEliminar.addEventListener("click", () => {
+    $btnEliminarConfirm.addEventListener("click", () => {
         const cantidadEliminar = parseInt($input.value);
         if (cantidadEliminar >= item.cantidad) {
             carrito.removerProducto(item.producto);
@@ -442,31 +453,78 @@ function mostrarConfirmacionVaciar(modalCarrito) {
     $confirmacion.appendChild($mensaje);
     
     const $footer = crearEtiqueta("footer");
-    const $btnCancelar = crearEtiqueta("button", {});
-    const $iconoCancelar = crearEtiqueta("i", {class: "bi bi-x-circle"});
-    $btnCancelar.appendChild($iconoCancelar);
-    $btnCancelar.appendChild(document.createTextNode(" Cancelar"));
-    const $btnAceptar = crearEtiqueta("button", {});
-    const $iconoAceptar = crearEtiqueta("i", {class: "bi bi-check-circle"});
-    $btnAceptar.appendChild($iconoAceptar);
-    $btnAceptar.appendChild(document.createTextNode(" Aceptar"));
-    $footer.appendChild($btnCancelar);
-    $footer.appendChild($btnAceptar);
+    const $btnCancelarVaciar = crearEtiqueta("button", {});
+    const $iconoCancelarVaciar = crearEtiqueta("i", {class: "bi bi-x-circle"});
+    $btnCancelarVaciar.appendChild($iconoCancelarVaciar);
+    $btnCancelarVaciar.appendChild(document.createTextNode(" Cancelar"));
+    const $btnAceptarVaciar = crearEtiqueta("button", {});
+    const $iconoAceptarVaciar = crearEtiqueta("i", {class: "bi bi-check-circle"});
+    $btnAceptarVaciar.appendChild($iconoAceptarVaciar);
+    $btnAceptarVaciar.appendChild(document.createTextNode(" Aceptar"));
+    $footer.appendChild($btnCancelarVaciar);
+    $footer.appendChild($btnAceptarVaciar);
     $confirmacion.appendChild($footer);
     
     document.body.appendChild($modalConfirm);
     $modalConfirm.showModal();
     
-    $btnCancelar.addEventListener("click", () => {
+    $btnCancelarVaciar.addEventListener("click", () => {
         $modalConfirm.close();
         document.body.removeChild($modalConfirm);
     });
     
-    $btnAceptar.addEventListener("click", () => {
+    $btnAceptarVaciar.addEventListener("click", () => {
         carrito.vaciarCarrito();
         actualizarMiniCarrito();
         $modalConfirm.close();
         document.body.removeChild($modalConfirm);
+        modalCarrito.close();
+        document.body.removeChild(modalCarrito);
+    });
+}
+
+function mostrarConfirmacionCompra(modalCarrito) {
+    const $modalCompra = crearEtiqueta("dialog", { class: "modal" });
+    const $compra = crearEtiqueta("div", { class: "confirmacion" });
+    $modalCompra.appendChild($compra);
+    
+    const $icono = crearEtiqueta("i", {class: "bi bi-check-circle-fill", style: "font-size: 3rem; color: #28a745; margin-bottom: 1rem;"});
+    $compra.appendChild($icono);
+    
+    const $titulo = crearEtiqueta("h2", {style: "color: #28a745;"}, "¡Compra realizada con éxito!");
+    $compra.appendChild($titulo);
+    
+    const $mensaje = crearEtiqueta("p", {}, "Detalle de tu compra:");
+    $compra.appendChild($mensaje);
+    
+    const $lista = crearEtiqueta("ul", {style: "list-style: none; text-align: left; margin: 1rem 0;"});
+    carrito.getItems().forEach(item => {
+        const $item = crearEtiqueta("li", {style: "padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;"});
+        $item.textContent = `${item.producto.getNombre()} - ${item.cantidad} x $${formatearPrecio(item.producto.getPrecio())}`;
+        $lista.appendChild($item);
+    });
+    $compra.appendChild($lista);
+    
+    const totalPrecio = carrito.calcularTotal();
+    const $total = crearEtiqueta("p", {style: "font-weight: 700; font-size: 1.3rem; color: #28a745; margin: 1rem 0;"}, `Total pagado: $${formatearPrecio(totalPrecio)}`);
+    $compra.appendChild($total);
+    
+    const $footer = crearEtiqueta("footer");
+    const $btnAceptar = crearEtiqueta("button", {});
+    const $iconoAceptar = crearEtiqueta("i", {class: "bi bi-check-lg"});
+    $btnAceptar.appendChild($iconoAceptar);
+    $btnAceptar.appendChild(document.createTextNode(" Aceptar"));
+    $footer.appendChild($btnAceptar);
+    $compra.appendChild($footer);
+    
+    document.body.appendChild($modalCompra);
+    $modalCompra.showModal();
+    
+    $btnAceptar.addEventListener("click", () => {
+        carrito.vaciarCarrito();
+        actualizarMiniCarrito();
+        $modalCompra.close();
+        document.body.removeChild($modalCompra);
         modalCarrito.close();
         document.body.removeChild(modalCarrito);
     });
