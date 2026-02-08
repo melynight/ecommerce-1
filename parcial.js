@@ -5,24 +5,24 @@
  */
 
 const productos = [
-    [
-        { id: "001", nombre: "Monitor 27\" curvo QHD", descripcion: "Monitor curvo de 27 pulgadas con resolución QHD y alta tasa de refresco.", 
-            precio: 275000.00, imagen: "monitor27curvoqhd.webp", categoria: "Monitores", stock: 25 },
-        { id: "002", nombre: "Monitor 24\" Full HD negro", descripcion: "Monitor de 24 pulgadas con resolución Full HD negro.", 
-            precio: 180000.00, imagen: "monitor24hd.webp", categoria: "Monitores", stock: 20 },
-        { id: "003", nombre: "Monitor 27\" Full HD blanco", descripcion: "Monitor de 27 pulgadas con resolución Full HD blanco.",
-            precio: 220000.00, imagen: "monitor27hdblanco.jpg", categoria: "Monitores", stock: 24 }
-    ],
-    [
-        { id: "004", nombre: "RAM 16GB Axus RGB", descripcion: "Memoria RAM 16GB 2.4GHz RGB SYNC", precio: 55000.00, imagen: "ramaxus16.png", categoria: "Memorias", stock: 34 },
-        { id: "005", nombre: "RAM 8GB Axus RGB", descripcion: "Memoria RAM 8GB 2.4GHz RGB SYNC", precio: 35000.00, imagen: "ramaxus8.png", categoria: "Memorias", stock: 27 },
-        { id: "006", nombre: "RAM 16GB HyperY RGB", descripcion: "Memoria RAM 16GB HyperY 2.4GHz RGB SYNC", precio: 65000.00, imagen: "ramhypery16.webp", categoria: "Memorias", stock: 30 }
-    ],
-    [
-        { id: "007", nombre: "Disco SSD 1TB", descripcion: "Disco sólido de 1TB Kingtan", precio: 100000.00, imagen: "discokingtan.png", categoria: "Discos", stock: 14 },
-        { id: "008", nombre: "Disco SSD 500GB", descripcion: "Disco sólido de 500GB Kingtan", precio: 60000.00, imagen: "discokingtan500.jpg", categoria: "Discos", stock: 19 },
-        { id: "009", nombre: "Disco HDD 2TB", descripcion: "Disco duro de 2TB Western Digital", precio: 80000.00, imagen: "discowd2tb.jpg", categoria: "Discos", stock: 33 }
-    ]
+    { id: "001", nombre: "Monitor 27\" curvo QHD", descripcion: "Monitor curvo de 27 pulgadas con resolución QHD y alta tasa de refresco.", 
+        precio: 275000.00, imagen: "monitor27curvoqhd.webp", categoria: "Monitores", stock: 25 },
+    { id: "002", nombre: "Monitor 24\" Full HD negro", descripcion: "Monitor de 24 pulgadas con resolución Full HD negro.", 
+        precio: 180000.00, imagen: "monitor24hd.webp", categoria: "Monitores", stock: 20 },
+    { id: "003", nombre: "Monitor 27\" Full HD blanco", descripcion: "Monitor de 27 pulgadas con resolución Full HD blanco.",
+        precio: 220000.00, imagen: "monitor27hdblanco.jpg", categoria: "Monitores", stock: 24 },
+    { id: "004", nombre: "RAM 16GB Axus RGB", descripcion: "Memoria RAM 16GB 2.4GHz RGB SYNC", 
+        precio: 55000.00, imagen: "ramaxus16.png", categoria: "Memorias", stock: 34 },
+    { id: "005", nombre: "RAM 8GB Axus RGB", descripcion: "Memoria RAM 8GB 2.4GHz RGB SYNC", 
+        precio: 35000.00, imagen: "ramaxus8.png", categoria: "Memorias", stock: 27 },
+    { id: "006", nombre: "RAM 16GB HyperY RGB", descripcion: "Memoria RAM 16GB HyperY 2.4GHz RGB SYNC", 
+        precio: 65000.00, imagen: "ramhypery16.webp", categoria: "Memorias", stock: 30 },
+    { id: "007", nombre: "Disco SSD 1TB", descripcion: "Disco sólido de 1TB Kingtan", 
+        precio: 100000.00, imagen: "discokingtan.png", categoria: "Discos", stock: 14 },
+    { id: "008", nombre: "Disco SSD 500GB", descripcion: "Disco sólido de 500GB Kingtan", 
+        precio: 60000.00, imagen: "discokingtan500.jpg", categoria: "Discos", stock: 19 },
+    { id: "009", nombre: "Disco HDD 2TB", descripcion: "Disco duro de 2TB Western Digital", 
+        precio: 80000.00, imagen: "discowd2tb.jpg", categoria: "Discos", stock: 33 }
 ];
 
 class Producto
@@ -101,6 +101,17 @@ class CarritoDeCompras
     vaciarCarrito() {
         this.#items = [];
     }
+
+    obtenerCantidadProductos() {
+    return this.#items.reduce(
+        (total, item) => total + item.cantidad,
+        0
+    )}
+
+    obtenerCantidadPorProducto(producto){
+        const item = this.#items.find(i => i.producto.getId() === producto.getId());
+        return item ? item.cantidad : 0;
+    }
 }
 
 class Cliente
@@ -154,107 +165,138 @@ function mostrarProductos(productos)
 {
     const $listaProductos = document.getElementById("productos");
 
-    for(let producto of productos)
+    for (let producto of productos)
     {
         const $producto = crearEtiqueta("li", {"data-id": producto.getId()});
-        $listaProductos.appendChild($producto);
-        const $imagen = crearEtiqueta("img", { src: `img/${producto.getImagen()}`, alt: producto.getNombre() });
-        $producto.appendChild($imagen);
+        $listaProductos.append($producto);
+
+        const $imagen = crearEtiqueta("img", { 
+            src: `img/${producto.getImagen()}`, 
+            alt: producto.getNombre() 
+        });
+        $producto.append($imagen);
+
         const $div = crearEtiqueta("div");
-        $producto.appendChild($div);
+        $producto.append($div);
+
         const $titulo = crearEtiqueta("h2", {}, producto.getNombre());
-        $div.appendChild($titulo);
+        $div.append($titulo);
+
         const $descripcion = crearEtiqueta("p", {}, producto.getDescripcion());
-        $div.appendChild($descripcion);
+        $div.append($descripcion);
+
         const $precio = crearEtiqueta("p");
-        $div.appendChild($precio);
-        const $spanPrecio = crearEtiqueta("span", {}, `$${formatearPrecio(producto.getPrecio())}`);
-        $precio.appendChild($spanPrecio);
+        const $spanPrecio = crearEtiqueta(
+            "span", 
+            {}, 
+            `$${formatearPrecio(producto.getPrecio())}`
+        );
+        $precio.append($spanPrecio);
+        $div.append($precio);
+
         const $footer = crearEtiqueta("footer");
-        $producto.appendChild($footer);
-        const $btnDetalle = crearEtiqueta("button", {class: "buttonVerDetalle"});
-        const $iconoDetalle = crearEtiqueta("i", {class: "bi bi-eye"});
-        $btnDetalle.appendChild($iconoDetalle);
-        $btnDetalle.appendChild(document.createTextNode(" Ver detalle"));
-        $footer.appendChild($btnDetalle);
-        const $btnAgregar = crearEtiqueta("button", {class: "agregarProducto"});
-        const $iconoAgregar = crearEtiqueta("i", {class: "bi bi-cart-plus"});
-        $btnAgregar.appendChild($iconoAgregar);
-        $btnAgregar.appendChild(document.createTextNode(" Agregar"));
-        $footer.appendChild($btnAgregar);
+        $producto.append($footer);
+
+        const $categoria = crearEtiqueta("div", {class: "categoria"}, producto.getCategoria());
+        $footer.append($categoria);
+
+        const $btnDetalle = crearEtiqueta("button", {"aria-label": "Ver detalle del producto", class: "buttonVerDetalle" });
+        const $iconoDetalle = crearEtiqueta("i", { class: "bi bi-eye" });
+        $btnDetalle.append($iconoDetalle);
+        $btnDetalle.append(document.createTextNode(" Ver detalle"));
+
+        $btnDetalle.addEventListener("click", () => {
+            verDetalleItem(producto);
+        });
+
+        $footer.append($btnDetalle);
+
+        const $btnAgregar = crearEtiqueta("button", {"aria-label": "Agregar producto al carrito", class: "agregarProducto" });
+        const $iconoAgregar = crearEtiqueta("i", { class: "bi bi-cart-plus" });
+        $btnAgregar.append($iconoAgregar);
+        $btnAgregar.append(document.createTextNode(" Agregar"));
+
+        $btnAgregar.addEventListener("click", () => {
+            agregarProducto(producto);
+        });
+
+        $footer.append($btnAgregar);
     }
 }
 
 function verDetalleItem(producto)
 {
     const $modalDetalle = crearEtiqueta("dialog", { class: "modal" });
+    const $cantidadAgregadaAlCarrito = crearEtiqueta("p", { class: "mensaje-carrito", hidden: true });
+    $modalDetalle.addEventListener("close", () => {
+        $modalDetalle.remove();
+    });
     const $detalle = crearEtiqueta("div", { class: "detalle" });
-    $modalDetalle.appendChild($detalle);
     const $imagen = crearEtiqueta("img", { src: `img/${producto.getImagen()}`, alt: producto.getNombre() });
-    $detalle.appendChild($imagen);
+    $detalle.append($imagen);
     const $titulo = crearEtiqueta("h1", {}, producto.getNombre());
-    $detalle.appendChild($titulo);
+    $detalle.append($titulo);
     const $descripcion = crearEtiqueta("p", {}, producto.getDescripcion());
-    $detalle.appendChild($descripcion);
+    $detalle.append($descripcion);
     const $precio = crearEtiqueta("p");
     const $spanPrecio = crearEtiqueta("span", {}, `$${formatearPrecio(producto.getPrecio())}`);
-    $precio.appendChild($spanPrecio);
-    $detalle.appendChild($precio);
+    $precio.append($spanPrecio);
+    $detalle.append($precio);
     const $categoria = crearEtiqueta("div", {class: "categoria"}, `Categoría: ${producto.getCategoria()}`);
-    $detalle.appendChild($categoria);
+    $detalle.append($categoria);
     
+    $modalDetalle.append($detalle);
+    $detalle.append($cantidadAgregadaAlCarrito);
+    actualizarCantidadProductoEnDetalle(producto, $cantidadAgregadaAlCarrito);
+
     const $mediosPago = mostrarMediosPago();
-    $detalle.appendChild($mediosPago);
+    $detalle.append($mediosPago);
     
     const $footer = crearEtiqueta("footer");
-    const $btnCerrar = crearEtiqueta("button", {class: "btn-cerrar"});
+    const $btnCerrar = crearEtiqueta("button", {"aria-label": "Cerrar modal Ver Detalle Item", class: "btn-cerrar"});
     const $iconoCerrar = crearEtiqueta("i", {class: "bi bi-x-lg"});
-    $btnCerrar.appendChild($iconoCerrar);
-    $btnCerrar.appendChild(document.createTextNode(" Cerrar"));
-    const $btnAgregarModal = crearEtiqueta("button", {});
+    $btnCerrar.append($iconoCerrar);
+    $btnCerrar.append(document.createTextNode(" Cerrar"));
+    const $btnAgregarModal = crearEtiqueta("button", {"aria-label": "Agregar producto al carrito desde modal"});
     const $iconoAgregarModal = crearEtiqueta("i", {class: "bi bi-cart-plus"});
-    $btnAgregarModal.appendChild($iconoAgregarModal);
-    $btnAgregarModal.appendChild(document.createTextNode(" Agregar"));
-    $footer.appendChild($btnCerrar);
-    $footer.appendChild($btnAgregarModal);
-    $detalle.appendChild($footer);
+    $btnAgregarModal.append($iconoAgregarModal);
+    $btnAgregarModal.append(document.createTextNode(" Agregar"));
+    append($btnCerrar);
+    append($btnAgregarModal);
+    $detalle.append($footer);
     
-    document.body.appendChild($modalDetalle);
+    document.body.append($modalDetalle);
     $modalDetalle.showModal();
     
     $btnCerrar.addEventListener("click", () => {
         $modalDetalle.close();
-        document.body.removeChild($modalDetalle);
     });
 
     $btnAgregarModal.addEventListener("click", () => {
         agregarProducto(producto);
-        $modalDetalle.close();
-        document.body.removeChild($modalDetalle);
+        actualizarCantidadProductoEnDetalle(producto, $cantidadAgregadaAlCarrito);
     });
 }
 
-function agregarEventos()
+function actualizarCantidadProductoEnDetalle(producto, $cantidadAgregadaAlCarrito)
 {
-    const $botonesVerDetalle = document.querySelectorAll(".buttonVerDetalle");
-    $botonesVerDetalle.forEach($btn => {
-        const productId = $btn.closest("li").getAttribute("data-id");
-        const producto = productosObj.find(p => p.getId() === productId);
-        $btn.addEventListener("click", () => verDetalleItem(producto));
-    });
+    const cantidad = carrito.obtenerCantidadPorProducto(producto);
+    if(cantidad > 0)
+    {
+        $cantidadAgregadaAlCarrito.textContent = `Has agregado ${cantidad} unidad${cantidad > 1 ? "es" : ""} de este producto al carrito`;
+        $cantidadAgregadaAlCarrito.hidden = false;
+    } else {
+        $cantidadAgregadaAlCarrito.hidden = true;
+    }
+}
 
-    const $botonesAgregar = document.querySelectorAll(".agregarProducto");
-    $botonesAgregar.forEach($btn => {
-        const productId = $btn.closest("li").getAttribute("data-id");
-        const producto = productosObj.find(p => p.getId() === productId);
-        $btn.addEventListener("click", () => agregarProducto(producto));
-    });
-
+function agregarEventosGlobales()
+{
     const $btnVerCarrito = document.querySelector("#mini-carrito button");
     $btnVerCarrito.addEventListener("click", mostrarModalCarrito);
 }
 
-const productosObj = productos.flat().map(item =>
+const productosObj = productos.map(item =>
     new Producto(item.id, item.nombre, item.precio, item.stock, item.descripcion, item.imagen, item.categoria)
 );
 
@@ -272,17 +314,17 @@ const mediosDePago = [
 function mostrarMediosPago() {
     const $mediosSection = crearEtiqueta("div", {class: "medios-pago"});
     const $titulo = crearEtiqueta("h3", {}, "Medios de pago disponibles");
-    $mediosSection.appendChild($titulo);
+    $mediosSection.append($titulo);
     
     const $lista = crearEtiqueta("ul");
     mediosDePago.forEach(medio => {
         const $item = crearEtiqueta("li");
         const $icono = crearEtiqueta("i", {class: `bi ${medio.icono}`});
-        $item.appendChild($icono);
-        $item.appendChild(document.createTextNode(` ${medio.texto}`));
-        $lista.appendChild($item);
+        $item.append($icono);
+        $item.append(document.createTextNode(` ${medio.texto}`));
+        $lista.append($item);
     });
-    $mediosSection.appendChild($lista);
+    $mediosSection.append($lista);
     
     return $mediosSection;
 }
@@ -302,76 +344,88 @@ function actualizarMiniCarrito() {
 
 function mostrarModalCarrito() {
     const $modalCarrito = crearEtiqueta("dialog", { class: "modal" });
+    $modalCarrito.addEventListener("close", () => {
+        $modalCarrito.remove();
+    });
+
     const $carrito = crearEtiqueta("div", { class: "carrito" });
-    $modalCarrito.appendChild($carrito);
+    $modalCarrito.append($carrito);
     
-    const totalItems = carrito.getItems().reduce((total, item) => total + item.cantidad, 0);
+    const totalItems = carrito.obtenerCantidadProductos();
     const totalPrecio = carrito.calcularTotal();
     
     const $header = crearEtiqueta("header");
     const $spanProductos = crearEtiqueta("span", {}, `Productos: ${totalItems}`);
-    $header.appendChild($spanProductos);
-    $carrito.appendChild($header);
+    $header.append($spanProductos);
+    $carrito.append($header);
     
     const $lista = crearEtiqueta("ul");
-    carrito.getItems().forEach(item => {
-        const $item = crearEtiqueta("li");
-        const $info = crearEtiqueta("span", {}, `${item.producto.getNombre()} - ${item.cantidad} x $${formatearPrecio(item.producto.getPrecio())}`);
-        const $eliminar = crearEtiqueta("a", { href: "#" }, "Eliminar");
-        $eliminar.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (item.cantidad > 1) {
-                mostrarModalCantidadEliminar(item, $modalCarrito);
-            } else {
-                carrito.removerProducto(item.producto);
-                actualizarMiniCarrito();
-                $modalCarrito.close();
-                document.body.removeChild($modalCarrito);
-                mostrarModalCarrito();
-            }
-        });
-        $item.appendChild($info);
-        $item.appendChild($eliminar);
-        $lista.appendChild($item);
-    });
-    $carrito.appendChild($lista);
     
+    if (carrito.getItems().length === 0) {
+    const $mensajeVacio = crearEtiqueta(
+        "p",
+        { class: "carrito-vacio" },
+        "No hay productos en el carrito"
+    );
+    $carrito.append($mensajeVacio);
+    }
+    if (carrito.getItems().length > 0) {
+        carrito.getItems().forEach(item => {
+            const $item = crearEtiqueta("li");
+            const $info = crearEtiqueta("span", {}, `${item.producto.getNombre()} - ${item.cantidad} x $${formatearPrecio(item.producto.getPrecio())}`);
+            const $eliminar = crearEtiqueta("a", { href: "#" }, "Eliminar");
+            $eliminar.addEventListener("click", (e) => {
+                e.preventDefault();
+                if (item.cantidad > 1) {
+                    mostrarModalCantidadEliminar(item, $modalCarrito);
+                } else {
+                    carrito.removerProducto(item.producto);
+                    actualizarMiniCarrito();
+                    $modalCarrito.close();
+                    mostrarModalCarrito();
+                }
+            });
+            $item.append($info);
+            $item.append($eliminar);
+            $lista.append($item);
+        });
+        $carrito.append($lista);
+    }
+
     const $totalSection = crearEtiqueta("div", {class: "total-carrito"});
     const $totalTexto = crearEtiqueta("h3", {}, `Total: $${formatearPrecio(totalPrecio)}`);
-    $totalSection.appendChild($totalTexto);
-    $carrito.appendChild($totalSection);
+    $totalSection.append($totalTexto);
+    $carrito.append($totalSection);
     
     const $footer = crearEtiqueta("footer");
-    const $btnCerrarCarrito = crearEtiqueta("button", {class: "btn-cerrar"});
+    const $btnCerrarCarrito = crearEtiqueta("button", {"aria-label": "Cerrar carrito", class: "btn-secundario btn-volver"});
     const $iconoCerrarCarrito = crearEtiqueta("i", {class: "bi bi-arrow-left"});
-    $btnCerrarCarrito.appendChild($iconoCerrarCarrito);
-    $btnCerrarCarrito.appendChild(document.createTextNode(" Volver atrás"));
-    const $btnVaciar = crearEtiqueta("button", {});
+    $btnCerrarCarrito.append($iconoCerrarCarrito);
+    $btnCerrarCarrito.append(document.createTextNode(" Volver atrás"));
+    const $btnVaciar = crearEtiqueta("button", {class: "btn-secundario btn-cancelar"});
+    $btnCerrarCarrito.addEventListener("click", () => {
+    $modalCarrito.close();
+    });
     const $iconoVaciar = crearEtiqueta("i", {class: "bi bi-trash"});
-    $btnVaciar.appendChild($iconoVaciar);
-    $btnVaciar.appendChild(document.createTextNode(" Vaciar"));
+    $btnVaciar.append($iconoVaciar);
+    $btnVaciar.append(document.createTextNode(" Vaciar"));
     
-    const $btnPagar = crearEtiqueta("button", {});
+    const $btnPagar = crearEtiqueta("button", {class: "btn-pagar"});
     
     if (carrito.getItems().length === 0) {
         $btnVaciar.disabled = true;
         $btnPagar.disabled = true;
     }
     const $iconoPagar = crearEtiqueta("i", {class: "bi bi-credit-card"});
-    $btnPagar.appendChild($iconoPagar);
-    $btnPagar.appendChild(document.createTextNode(" Finalizar compra"));
-    $footer.appendChild($btnCerrarCarrito);
-    $footer.appendChild($btnVaciar);
-    $footer.appendChild($btnPagar);
-    $carrito.appendChild($footer);
+    $btnPagar.append($iconoPagar);
+    $btnPagar.append(document.createTextNode(" Finalizar compra"));
+    $footer.append($btnCerrarCarrito);
+    $footer.append($btnVaciar);
+    $footer.append($btnPagar);
+    $carrito.append($footer);
     
-    document.body.appendChild($modalCarrito);
+    document.body.append($modalCarrito);
     $modalCarrito.showModal();
-    
-    $btnCerrarCarrito.addEventListener("click", () => {
-        $modalCarrito.close();
-        document.body.removeChild($modalCarrito);
-    });
     
     $btnVaciar.addEventListener("click", () => {
         if (carrito.getItems().length === 0) {
@@ -390,150 +444,195 @@ function mostrarModalCarrito() {
 
 function mostrarModalCantidadEliminar(item, modalCarrito) {
     const $modalCantidad = crearEtiqueta("dialog", { class: "modal" });
+    $modalCantidad.addEventListener("close", () => {
+        $modalCantidad.remove();
+    });
+
     const $contenido = crearEtiqueta("div", { class: "confirmacion" });
-    $modalCantidad.appendChild($contenido);
-    
+    $modalCantidad.append($contenido);
+
     const $titulo = crearEtiqueta("h2", {}, "¿Cuántos eliminar?");
-    $contenido.appendChild($titulo);
-    
-    const $mensaje = crearEtiqueta("p", {}, `Tienes ${item.cantidad} unidades de "${item.producto.getNombre()}". ¿Cuántas deseas eliminar?`);
-    $contenido.appendChild($mensaje);
-    
-    const $inputContainer = crearEtiqueta("div", {style: "margin: 1rem 0; text-align: center;"});
-    const $input = crearEtiqueta("input", {type: "number", min: "1", max: item.cantidad.toString(), value: "1", style: "padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc; width: 80px;"});
-    $inputContainer.appendChild($input);
-    $contenido.appendChild($inputContainer);
-    
+    const $mensaje = crearEtiqueta(
+        "p",
+        {},
+        `Tienes ${item.cantidad} unidades de "${item.producto.getNombre()}". ¿Cuántas deseas eliminar?`
+    );
+
+    $contenido.append($titulo, $mensaje);
+
+    let cantidadEliminar = 1;
+
+    const $contador = crearEtiqueta("div", { class: "contador-cantidad" });
+
+    const $btnMenos = crearEtiqueta("button", {
+        class: "btn-contador",
+        "aria-label": "Reducir cantidad a eliminar"
+    }, "−");
+
+    const $cantidadTexto = crearEtiqueta(
+        "span",
+        { class: "cantidad-texto", "aria-live": "polite" },
+        cantidadEliminar.toString()
+    );
+
+    const $btnMas = crearEtiqueta("button", {
+        class: "btn-contador",
+        "aria-label": "Aumentar cantidad a eliminar"
+    }, "+");
+
+    $contador.append($btnMenos, $cantidadTexto, $btnMas);
+    $contenido.append($contador);
+
     const $footer = crearEtiqueta("footer");
-    const $btnCancelarEliminar = crearEtiqueta("button", {});
-    const $iconoCancelarEliminar = crearEtiqueta("i", {class: "bi bi-arrow-left"});
-    $btnCancelarEliminar.appendChild($iconoCancelarEliminar);
-    $btnCancelarEliminar.appendChild(document.createTextNode(" Volver atrás"));
-    const $btnEliminarConfirm = crearEtiqueta("button", {});
-    const $iconoEliminarConfirm = crearEtiqueta("i", {class: "bi bi-trash"});
-    $btnEliminarConfirm.appendChild($iconoEliminarConfirm);
-    $btnEliminarConfirm.appendChild(document.createTextNode(" Eliminar"));
-    $footer.appendChild($btnCancelarEliminar);
-    $footer.appendChild($btnEliminarConfirm);
-    $contenido.appendChild($footer);
-    
-    document.body.appendChild($modalCantidad);
+
+    const $btnCancelarEliminar = crearEtiqueta(
+        "button",
+        { class: "btn-secundario btn-volver", "aria-label": "Cancelar eliminación" }
+    );
+    $btnCancelarEliminar.append(
+        crearEtiqueta("i", { class: "bi bi-arrow-left" }),
+        " Volver atrás"
+    );
+
+    const $btnEliminarConfirm = crearEtiqueta(
+        "button",
+        { class: "btn-cancelar", "aria-label": "Confirmar eliminación" }
+    );
+    $btnEliminarConfirm.append(
+        crearEtiqueta("i", { class: "bi bi-trash" }),
+        " Eliminar"
+    );
+
+    $footer.append($btnCancelarEliminar, $btnEliminarConfirm);
+    $contenido.append($footer);
+
+    document.body.append($modalCantidad);
     $modalCantidad.showModal();
-    
+
+    $btnMas.addEventListener("click", () => {
+        if (cantidadEliminar < item.cantidad) {
+            cantidadEliminar++;
+            $cantidadTexto.textContent = cantidadEliminar;
+        }
+    });
+
+    $btnMenos.addEventListener("click", () => {
+        if (cantidadEliminar > 1) {
+            cantidadEliminar--;
+            $cantidadTexto.textContent = cantidadEliminar;
+        }
+    });
+
     $btnCancelarEliminar.addEventListener("click", () => {
         $modalCantidad.close();
-        document.body.removeChild($modalCantidad);
     });
-    
+
     $btnEliminarConfirm.addEventListener("click", () => {
-        const cantidadEliminar = parseInt($input.value);
         if (cantidadEliminar >= item.cantidad) {
             carrito.removerProducto(item.producto);
         } else {
             item.cantidad -= cantidadEliminar;
         }
+
         actualizarMiniCarrito();
         $modalCantidad.close();
-        document.body.removeChild($modalCantidad);
         modalCarrito.close();
-        document.body.removeChild(modalCarrito);
         mostrarModalCarrito();
     });
 }
 
 function mostrarConfirmacionVaciar(modalCarrito) {
     const $modalConfirm = crearEtiqueta("dialog", { class: "modal" });
+    $modalConfirm.addEventListener("close", () => {
+        $modalConfirm.remove();
+    });
     const $confirmacion = crearEtiqueta("div", { class: "confirmacion" });
-    $modalConfirm.appendChild($confirmacion);
+    $modalConfirm.append($confirmacion);
     
     const $titulo = crearEtiqueta("h2", {}, "¿Vaciar carrito?");
-    $confirmacion.appendChild($titulo);
+    $confirmacion.append($titulo);
     
     const $mensaje = crearEtiqueta("p", {}, "¿Estás seguro de que deseas vaciar todo el carrito? Esta acción no se puede deshacer.");
-    $confirmacion.appendChild($mensaje);
+    $confirmacion.append($mensaje);
     
     const $footer = crearEtiqueta("footer");
-    const $btnCancelarVaciar = crearEtiqueta("button", {});
+    const $btnCancelarVaciar = crearEtiqueta("button", {"aria-label": "Cancelar vaciado del carrito"});
     const $iconoCancelarVaciar = crearEtiqueta("i", {class: "bi bi-x-circle"});
-    $btnCancelarVaciar.appendChild($iconoCancelarVaciar);
-    $btnCancelarVaciar.appendChild(document.createTextNode(" Cancelar"));
-    const $btnAceptarVaciar = crearEtiqueta("button", {});
+    $btnCancelarVaciar.append($iconoCancelarVaciar);
+    $btnCancelarVaciar.append(document.createTextNode(" Cancelar"));
+    const $btnAceptarVaciar = crearEtiqueta("button", {"aria-label": "Confirmar vaciado del carrito"});
     const $iconoAceptarVaciar = crearEtiqueta("i", {class: "bi bi-check-circle"});
-    $btnAceptarVaciar.appendChild($iconoAceptarVaciar);
-    $btnAceptarVaciar.appendChild(document.createTextNode(" Aceptar"));
-    $footer.appendChild($btnCancelarVaciar);
-    $footer.appendChild($btnAceptarVaciar);
-    $confirmacion.appendChild($footer);
+    $btnAceptarVaciar.append($iconoAceptarVaciar, document.createTextNode(" Aceptar"));
+    $footer.append($btnCancelarVaciar, $btnAceptarVaciar);
+    $confirmacion.append($footer);
     
-    document.body.appendChild($modalConfirm);
+    document.body.append($modalConfirm);
     $modalConfirm.showModal();
     
     $btnCancelarVaciar.addEventListener("click", () => {
         $modalConfirm.close();
-        document.body.removeChild($modalConfirm);
     });
     
     $btnAceptarVaciar.addEventListener("click", () => {
         carrito.vaciarCarrito();
         actualizarMiniCarrito();
         $modalConfirm.close();
-        document.body.removeChild($modalConfirm);
         modalCarrito.close();
-        document.body.removeChild(modalCarrito);
     });
 }
 
 function mostrarConfirmacionCompra(modalCarrito) {
     const $modalCompra = crearEtiqueta("dialog", { class: "modal" });
+    $modalCompra.addEventListener("close", () => {
+        $modalCompra.remove();
+    });
     const $compra = crearEtiqueta("div", { class: "confirmacion" });
-    $modalCompra.appendChild($compra);
+    $modalCompra.append($compra);
     
-    const $icono = crearEtiqueta("i", {class: "bi bi-check-circle-fill", style: "font-size: 3rem; color: #28a745; margin-bottom: 1rem;"});
-    $compra.appendChild($icono);
+    const $icono = crearEtiqueta("i", { class: "bi bi-check-circle-fill icono-exito"});   
+    $compra.append($icono);
     
-    const $titulo = crearEtiqueta("h2", {style: "color: #28a745;"}, "¡Compra realizada con éxito!");
-    $compra.appendChild($titulo);
+    const $titulo = crearEtiqueta("h2", { class: "titulo-exito" }, "¡Compra realizada con éxito!");
+    $compra.append($titulo);
     
     const $mensaje = crearEtiqueta("p", {}, "Detalle de tu compra:");
-    $compra.appendChild($mensaje);
+    $compra.append($mensaje);
     
-    const $lista = crearEtiqueta("ul", {style: "list-style: none; text-align: left; margin: 1rem 0;"});
+    const $lista = crearEtiqueta("ul", { class: "lista-resumen" });
     carrito.getItems().forEach(item => {
-        const $item = crearEtiqueta("li", {style: "padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;"});
+        const $item = crearEtiqueta("li", { class: "item-resumen" });
         $item.textContent = `${item.producto.getNombre()} - ${item.cantidad} x $${formatearPrecio(item.producto.getPrecio())}`;
-        $lista.appendChild($item);
+        $lista.append($item);
     });
-    $compra.appendChild($lista);
+    $compra.append($lista);
     
     const totalPrecio = carrito.calcularTotal();
-    const $total = crearEtiqueta("p", {style: "font-weight: 700; font-size: 1.3rem; color: #28a745; margin: 1rem 0;"}, `Total pagado: $${formatearPrecio(totalPrecio)}`);
-    $compra.appendChild($total);
+    const $total = crearEtiqueta("p", { class: "total-pagado" }, `Total pagado: $${formatearPrecio(totalPrecio)}`);
+    $compra.append($total);
     
     const $footer = crearEtiqueta("footer");
-    const $btnAceptar = crearEtiqueta("button", {});
+    const $btnAceptar = crearEtiqueta("button", {"aria-label": "Aceptar compra"});
     const $iconoAceptar = crearEtiqueta("i", {class: "bi bi-check-lg"});
-    $btnAceptar.appendChild($iconoAceptar);
-    $btnAceptar.appendChild(document.createTextNode(" Aceptar"));
-    $footer.appendChild($btnAceptar);
-    $compra.appendChild($footer);
+    $btnAceptar.append($iconoAceptar, document.createTextNode(" Aceptar"));
+    append($btnAceptar);
+    $footer.append($btnAceptar);
+    $compra.append($footer);
     
-    document.body.appendChild($modalCompra);
+    document.body.append($modalCompra);
     $modalCompra.showModal();
     
     $btnAceptar.addEventListener("click", () => {
         carrito.vaciarCarrito();
         actualizarMiniCarrito();
         $modalCompra.close();
-        document.body.removeChild($modalCompra);
         modalCarrito.close();
-        document.body.removeChild(modalCarrito);
     });
 }
 
 function main()
 {
     mostrarProductos(productosObj);
-    agregarEventos();
+    agregarEventosGlobales();
 }
 
 main();

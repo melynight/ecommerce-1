@@ -130,6 +130,13 @@ button:active {
   font-size: 1.1rem;
 }
 
+.carrito-vacio {
+  text-align: center;
+  margin: 1rem 0;
+  color: #666;
+  font-style: italic;
+}
+
 #productos {
   display: grid;
   grid-template-columns: 100%;
@@ -194,6 +201,7 @@ button:active {
   display: flex;
   gap: 0.5rem;
   margin-top: 1rem;
+  flex-direction: column;
 }
 
 #productos footer button {
@@ -225,7 +233,7 @@ button:active {
   padding: 1.5rem;
   width: 90%;
   max-width: 600px;
-  max-height: 85vh;
+  max-height: 90vh;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   background: white;
   position: fixed;
@@ -296,9 +304,9 @@ button:active {
   margin: 1rem 0;
   border: 2px solid #dee2e6;
   font-style: italic;
+  text-align: center;
 }
 
-/* Precio más grande y llamativo */
 .detalle p span {
   font-weight: 800 !important;
   font-size: 2rem !important;
@@ -306,7 +314,6 @@ button:active {
   text-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
 }
 
-/* Estilos para modal del carrito */
 .carrito {
   text-align: center;
 }
@@ -391,13 +398,54 @@ button:active {
   margin: 0;
 }
 
-.btn-cerrar {
-  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
-  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3) !important;
+.btn-cancelar {
+  background: transparent;
+  color: #ca4451;
+  border: 1px solid #dc3545;
 }
 
-.btn-cerrar:hover {
-  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4) !important;
+.btn-cancelar:hover {
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.btn-volver {
+  background: transparent;
+  color: #666;
+}
+
+.btn-volver:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.btn-pagar {
+  background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+  color: white;
+  font-weight: bold;
+  padding: 0.7rem 1.2rem;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+
+.btn-pagar:hover {
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+  transform: translateY(-1px);
+}
+
+.btn-secundario {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+  min-width: auto;
+}
+
+.btn-volver,
+.btn-vaciar {
+  padding: 0.3rem 0.55rem;
+  font-size: 0.8rem;
+}
+
+.btn-pagar {
+  padding: 1rem 1.6rem;
+  font-size: 0.9rem;
+  min-width: 200px;
 }
 
 .total-carrito {
@@ -461,6 +509,69 @@ button:disabled:hover {
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
 }
 
+.input-container {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.input-cantidad {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 80px;
+}
+
+.icono-exito {
+  font-size: 3rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+.titulo-exito {
+  color: #28a745;
+}
+
+.lista-resumen {
+  list-style: none;
+  text-align: left;
+  margin: 1rem 0;
+  padding: 0;
+}
+
+.item-resumen {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.total-pagado {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #28a745;
+  margin: 1rem 0;
+}
+
+.contador-cantidad {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.btn-contador {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.cantidad-texto {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.btn-contador:hover {
+  transform: none;
+}
 
 @media (min-width: 576px) {
   .web > footer ul {
